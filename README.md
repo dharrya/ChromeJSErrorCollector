@@ -1,0 +1,4 @@
+JSErrorCollector
+================
+
+JSErrorCollector for Chrome
