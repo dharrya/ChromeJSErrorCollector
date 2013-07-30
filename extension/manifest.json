@@ -1,0 +1,16 @@
+{
+	"name":"JavaScript Errors Collector",
+	"manifest_version":2,
+	"version":"0.3",
+	"content_scripts":[
+		{
+			"all_frames":true,
+			"js":[ "content.js" ],
+			"matches":[ "http://*/*", "https://*/*", "file://*/*" ],
+			"run_at":"document_start"
+		}
+	],
+	"description":"Collect JavaScript errors on all tabs, special for Oleg",
+	"incognito":"spanning",
+	"web_accessible_resources": [ "error_listener.js" ]
+}
