@@ -1,5 +1,4 @@
-JSErrorCollector extension for Chrome, compatible with <a href="https://github.com/mguillem/JSErrorCollector" target="_blank">JSErrorCollector for FireFox</a><br>
-Provide access to JavaScript errors while running tests with a ChromeDriver.<br>
+JSErrorCollector for Chrome provide access to JavaScript errors while running tests with a ChromeDriver.<br>
 Usage in Python:<br>
 <pre>
 	<code>
