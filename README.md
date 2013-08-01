@@ -17,5 +17,7 @@ pprint.pprint(driver.execute_script('return window.JSErrorCollector_errors ? win
 driver.quit()
 	</code>
 </pre>
-Note: When you first start you must install the extension from the extension folder.
+Note: When you first start you must install the extension from the extension folder.<br>
+<p>
 I've been inspired to this by Oleg Strokatyy. He is a nice funny guy and great professional:-)
+</p>
