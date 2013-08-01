@@ -1,0 +1,1 @@
+window.notExisting = foo();
