@@ -18,3 +18,4 @@ driver.quit()
 	</code>
 </pre>
 Note: When you first start you must install the extension from the extension folder.
+I've been inspired to this by Oleg Strokatyy. He is a nice funny guy and great professional:-)
