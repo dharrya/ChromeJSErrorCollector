@@ -23,36 +23,38 @@ var JSErrorCollector = {
 		this.saveErrors([]);
 	},
 	onError: function(errorMessage, sourceName, lineNumber) {
+		if(!errorMessage.message) {
+			return;
+		}
 		if(!!errorMessage.filename) {
 			sourceName = errorMessage.filename;
 		}
 		if(!!errorMessage.lineno) {
 			lineNumber = errorMessage.lineno;
 		}
-		if(!!errorMessage.target.chrome && !sourceName && !lineNumber) {
+
+		if(!!errorMessage.target.chrome && !sourceName && !lineNumber && errorMessage.message != 'Script error.') {
 			return;
-		}
-		if(!!errorMessage.message) {
-			errorMessage = errorMessage.message;
+		}	
+
+		errorMessage = errorMessage.message;
+		if(errorMessage == 'Script error.') {
+			var error = {
+				errorMessage: errorMessage,
+				sourceName: '',
+				lineNumber: 0,
+				pageUrl: document.location.href	
+			}
 		} else {
-			if(!!errorMessage.target && !!errorMessage.target.src) {
-				sourceName = window.location.href;
-				errorMessage = 'File not found: ' + errorMessage.target.src;
+			var error = {
+				errorMessage: errorMessage.replace(/^Uncaught /g, ''),
+				sourceName: sourceName,
+				lineNumber: lineNumber,
+				pageUrl: document.location.href	
 			}
 		}
 
-		if(typeof(errorMessage) == 'string') {
-			errorMessage = errorMessage.replace(/^Uncaught /g, '');
-		} else {
-			errorMessage = 'Unknown JavaScript error';
-		}
-
-		JSErrorCollector.push({
-			errorMessage: errorMessage,
-			sourceName: sourceName,
-			lineNumber: lineNumber,
-			pageUrl: document.location.href
-		});
+		JSErrorCollector.push(error);
 	},
 	initialize: function() {
 		window.addEventListener('error', JSErrorCollector.onError, false);

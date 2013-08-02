@@ -23,11 +23,11 @@ class Test(object):
             print('Extension not installed, please install it at chrome://extensions page')
             return
 
-        self.test_simple_inline()
         self.test_simple_event()
         self.test_simple()
         self.test_frame()
         self.test_external_js()
+        self.test_external_js_cors()
         print('All done, you\'re rock!')
 
     def test_extension_installed(self):
@@ -102,15 +102,30 @@ class Test(object):
         return self.equals(expected_errors, actual_errors)
 
     def test_external_js(self):
-        uri = self.get_resource('external_js.html')
+        uri = 'http://stuff-dharrya.rhcloud.com/static/js_error_collector/external_js.html'
         self._driver.get(uri)
-        actual_errors = self.remove_path(self.get_errors())
+        actual_errors = self.get_errors()
         expected_errors = [
             {
                 'errorMessage': "ReferenceError: foo is not defined",
-                'sourceName': 'external.js',
-                'pageUrl': 'external_js.html',
+                'sourceName': 'http://stuff-dharrya.rhcloud.com/static/js_error_collector/external.js',
+                'pageUrl': uri,
                 'lineNumber': 1
+            }
+        ]
+        return self.equals(expected_errors, actual_errors)
+
+    def test_external_js_cors(self):
+        uri = self.get_resource('external_js.html')
+        self._driver.get(uri)
+        actual_errors = self.remove_path(self.get_errors())
+        #ErrorEvent{lineno: 0, filename: "", message: "Script error." ..} on cross-domain JS error by security policy
+        expected_errors = [
+            {
+                'errorMessage': 'Script error.',
+                'sourceName': '',
+                'pageUrl': 'external_js.html',
+                'lineNumber': 0
             }
         ]
         return self.equals(expected_errors, actual_errors)
