@@ -20,8 +20,8 @@ Will output:
 ```
 [{
 	'sourceName': 'http://stuff-dharrya.rhcloud.com/get_js_error',
-	'pageUrl': u'http://stuff-dharrya.rhcloud.com/get_js_error',
-	'errorMessage': u'ReferenceError: someVariable is not defined',
+	'pageUrl': 'http://stuff-dharrya.rhcloud.com/get_js_error',
+	'errorMessage': 'ReferenceError: someVariable is not defined',
 	'lineNumber': 9
 }]
 ```
