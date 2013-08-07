@@ -4,26 +4,23 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import os
-import inspect
+import unittest
 
 
-class Test(object):
+class Test(unittest.TestCase):
     _pump_js = 'return window.JSErrorCollector_errors ? window.JSErrorCollector_errors.pump() : []'
     _clear_js = 'if(!!window.JSErrorCollector_errors) window.JSErrorCollector_errors.clear();'
+    _driver = None
 
-    def __init__(self):
+    @classmethod
+    def setUpClass(cls):
         chrome_options = Options()
         chrome_options.add_extension('../extension.crx')
-        self._driver = webdriver.Chrome(chrome_options=chrome_options)
+        cls._driver = webdriver.Chrome(chrome_options=chrome_options)
 
-    def run(self):
-        self.test_simple_event()
-        self.test_simple()
-        self.test_frame()
-        self.test_external_js()
-        self.test_external_js_cors()
-        print('All done, you\'re rock!')
-        self._driver.quit()
+    @classmethod
+    def tearDownClass(cls):
+        cls._driver.quit()
 
     def test_simple_inline(self):
         uri = self.get_resource('simple.html')
@@ -37,7 +34,7 @@ class Test(object):
                 'lineNumber': 5
             }
         ]
-        return self.equals(expected_errors, actual_errors)
+        self.assertEqual(expected_errors, actual_errors)
 
     def test_simple_event(self):
         uri = self.get_resource('simple.html')
@@ -53,7 +50,7 @@ class Test(object):
                 'lineNumber': 9
             }
         ]
-        return self.equals(expected_errors, actual_errors)
+        self.assertEqual(expected_errors, actual_errors)
 
     def test_simple(self):
         uri = self.get_resource('simple.html')
@@ -74,7 +71,7 @@ class Test(object):
                 'lineNumber': 9
             }
         ]
-        return self.equals(expected_errors, actual_errors)
+        self.assertEqual(expected_errors, actual_errors)
 
     def test_frame(self):
         uri = self.get_resource('frame.html')
@@ -88,7 +85,7 @@ class Test(object):
                 'lineNumber': 5
             }
         ]
-        return self.equals(expected_errors, actual_errors)
+        self.assertEqual(expected_errors, actual_errors)
 
     def test_external_js(self):
         uri = 'http://stuff-dharrya.rhcloud.com/static/js_error_collector/external_js.html'
@@ -102,7 +99,7 @@ class Test(object):
                 'lineNumber': 1
             }
         ]
-        return self.equals(expected_errors, actual_errors)
+        self.assertEqual(expected_errors, actual_errors)
 
     def test_external_js_cors(self):
         uri = self.get_resource('external_js.html')
@@ -117,7 +114,7 @@ class Test(object):
                 'lineNumber': 0
             }
         ]
-        return self.equals(expected_errors, actual_errors)
+        self.assertEqual(expected_errors, actual_errors)
 
     def get_resource(self, file_name):
         return 'file://{abs_path}'.format(
@@ -138,26 +135,6 @@ class Test(object):
                 item['pageUrl'] = os.path.basename(item['pageUrl'])
         return errors
 
-    def equals(self, expected, actual):
-        if expected != actual:
-            test_name = inspect.stack()[1][3]
-            delimiter = '-' * 10
-            print('''
-                {delimiter}\n
-                {test_name} - Failed\n
-                Expected: {expected}\n
-                Actual: {actual}\n
-                {delimiter}\n
-                '''.format(
-                delimiter=delimiter,
-                test_name=test_name,
-                expected=expected,
-                actual=actual
-                )
-            )
-            return False
-        return True
 
 if __name__ == '__main__':
-    tests = Test()
-    tests.run()
+    unittest.main()
