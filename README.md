@@ -18,7 +18,12 @@ driver.quit()
 ```
 Will output:
 ```
-[{u'sourceName': u'http://stuff-dharrya.rhcloud.com/get_js_error', u'pageUrl': u'http://stuff-dharrya.rhcloud.com/get_js_error', u'errorMessage': u'ReferenceError: someVariable is not defined', u'lineNumber': 9}]
+[{
+	'sourceName': 'http://stuff-dharrya.rhcloud.com/get_js_error',
+	'pageUrl': u'http://stuff-dharrya.rhcloud.com/get_js_error',
+	'errorMessage': u'ReferenceError: someVariable is not defined',
+	'lineNumber': 9
+}]
 ```
 
 ## Thanks
