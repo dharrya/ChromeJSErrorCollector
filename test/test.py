@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.3
+#!/usr/bin/env python2.7
 # -*- coding: utf-8 -*-
 
 from selenium import webdriver
@@ -10,31 +10,20 @@ import inspect
 class Test(object):
     _pump_js = 'return window.JSErrorCollector_errors ? window.JSErrorCollector_errors.pump() : []'
     _clear_js = 'if(!!window.JSErrorCollector_errors) window.JSErrorCollector_errors.clear();'
-    _close_driver = True
 
     def __init__(self):
         chrome_options = Options()
-        chrome_options.add_argument('--user-data-dir=.chrome_driver_data')
+        chrome_options.add_extension('../extension.crx')
         self._driver = webdriver.Chrome(chrome_options=chrome_options)
 
     def run(self):
-        if not self.test_extension_installed():
-            self._close_driver = False
-            print('Extension not installed, please install it at chrome://extensions page')
-            return
-
         self.test_simple_event()
         self.test_simple()
         self.test_frame()
         self.test_external_js()
         self.test_external_js_cors()
         print('All done, you\'re rock!')
-
-    def test_extension_installed(self):
-        uri = self.get_resource('extension_installed.html')
-        self._driver.get(uri)
-        self.clear_errors()
-        return self._driver.execute_script('return !!window.JSErrorCollector_errors')
+        self._driver.quit()
 
     def test_simple_inline(self):
         uri = self.get_resource('simple.html')
@@ -168,10 +157,6 @@ class Test(object):
             )
             return False
         return True
-
-    def __del__(self):
-        if self._close_driver:
-            self._driver.quit()
 
 if __name__ == '__main__':
     tests = Test()
